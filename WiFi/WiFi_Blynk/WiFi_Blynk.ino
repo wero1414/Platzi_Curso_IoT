@@ -7,14 +7,14 @@
 
 // Tu tendras tu token de autorizacion en la aplicacion de Blynk "Auth Token".
 // Para obtenerlo ve a configuracion de proyecto.
-char auth[] = "560a4a918c5048e89c398d3d6b5f76b7";
+char auth[] = "6b1e353ac76c4270b5e24a269c6415f8";
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
 char ssid[] = "TihBeta2";
 char pass[] = "1nv3nt0r3S";
 
-#define DHTPIN 2         
+#define DHTPIN 23        
 #define INTPIN 4
 
 // Descomenta el tipo de DHT que estes usando
