@@ -37,12 +37,11 @@ volatile int  ext_intFlag   = 0;
 // Usamos esta funcion como una funcion dummy para activar una bandera
 // para poder establecer la conexion a internet en el void loop
 void checkPin(){
-  // Invert state, since button is "Active LOW"
+  // Invertimos el estado logico que usamos como auxiliar
   ext_intFlag = !ext_intFlag;
   // Activamos la bandera de interrupcion
   pinChanged = true;
 }
-
 
 
 // Esta funcion envia cada dos segundos por dos pines virtuales
@@ -105,7 +104,7 @@ void loop(){
     else{
       led1.off();
     }
-    // Clear the mark, as we have processed the value
+    // Borramos la bandera de cambio de estado por interrupcion
     pinChanged = false;
   }
 }
