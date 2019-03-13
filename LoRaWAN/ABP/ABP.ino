@@ -143,7 +143,7 @@ void setup() {
       // TTN
       LMIC_enableChannel(8);
       LMIC_enableChannel(9);
-      LMIC_enableChannel(10);  //904.3Mhz
+      LMIC_enableChannel(10);  //904.3Mhz used for monochannel Gw
       LMIC_enableChannel(11);
       LMIC_enableChannel(12);
       LMIC_enableChannel(13);
