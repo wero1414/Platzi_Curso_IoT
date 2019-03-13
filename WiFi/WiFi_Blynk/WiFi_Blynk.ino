@@ -6,7 +6,7 @@
 #include <DHT.h>
 
 // Tu tendras tu token de autorizacion en la aplicacion de Blynk "Auth Token".
-// Para obtenerlo ve a onfiguracion de proyecto.
+// Para obtenerlo ve a configuracion de proyecto.
 char auth[] = "560a4a918c5048e89c398d3d6b5f76b7";
 
 // Your WiFi credentials.
@@ -14,10 +14,10 @@ char auth[] = "560a4a918c5048e89c398d3d6b5f76b7";
 char ssid[] = "TihBeta2";
 char pass[] = "1nv3nt0r3S";
 
-#define DHTPIN 2         // What digital pin we're connected to
+#define DHTPIN 2         
 #define INTPIN 4
 
-// Uncomment whatever type you're using!
+// Descomenta el tipo de DHT que estes usando
 //#define DHTTYPE DHT11     // DHT 11
 #define DHTTYPE DHT22   // DHT 22, AM2302, AM2321
 //#define DHTTYPE DHT21   // DHT 21, AM2301
@@ -27,14 +27,15 @@ BlynkTimer timer;
 
 WidgetLED led1(V1);
 
-// We make these values volatile, as they are used in interrupt context
+// Creamos las variables que se usaran dentro de la interrupcion
+// Variable tipo volatile porque puede cambiar de forma rapida.
 volatile bool pinChanged = false;
 volatile int  ext_intFlag   = 0;
 
 
-
-// Most boards won't send data to WiFi out of interrupt handler.
-// We just store the value and process it in the main loop.
+// Funcion que maneja la interrupcion del pin donde tenemos nuestro boton
+// Usamos esta funcion como una funcion dummy para activar una bandera
+// para poder establecer la conexion a internet en el void loop
 void checkPin(){
   // Invert state, since button is "Active LOW"
   ext_intFlag = !ext_intFlag;
@@ -43,33 +44,31 @@ void checkPin(){
 }
 
 
-// This function sends Arduino's up time every second to Virtual Pin (5).
-// In the app, Widget's reading frequency should be set to PUSH. This means
-// that you define how often to send data to Blynk App.
+
+// Esta funcion envia cada dos segundos por dos pines virtuales
+// la temperatura y la humedad sensada por el sensor DHT.
+// El tiempo de reporte se maneja con un timer que se define en el void setup()
 void sendSensor()
 {
   float h = dht.readHumidity();
-  float t = dht.readTemperature(); // or dht.readTemperature(true) for Fahrenheit
+  float t = dht.readTemperature(); 
 
   if (isnan(h) || isnan(t)) {
     Serial.println("Failed to read from DHT sensor!");
     return;
   }
-  // You can send any value at any time.
-  // Please don't send more that 10 values per second.
-  Serial.println("Humedad: "+String(h));
-  Serial.println("Temperatura: "+String(t));
   Blynk.virtualWrite(V5, h);
   Blynk.virtualWrite(V6, t);
 }
 
-// This function will be called every time Slider Widget
-// in Blynk app writes values to the Virtual Pin 1
+// Esta funcion se activa cada que se reciben datos por
+// el pin virtual V0, cada que en la aplicacion se modifica
+// el valro
 BLYNK_WRITE(V0){
   int V0Data = param.asInt(); // Asignamos el valor que recibimos en V0 como entero.
   // Tambien puedes usar:
-  // String i = param.asStr();
-  // double d = param.asDouble();
+  //    String i = param.asStr();
+  //    double d = param.asDouble();
   // Para distintos tipos de datos.
   // Serial.print("V0 value is: ");
   // Serial.println(V0Data);
@@ -79,24 +78,23 @@ BLYNK_WRITE(V0){
 void setup(){
   // Debug console
   Serial.begin(9600);
-  // Make pin 2 HIGH by default
+  //Configuramos 
   pinMode(INTPIN, INPUT_PULLUP);
   pinMode(16,OUTPUT);
-  // Attach INT to our handler
+  // Definimos pin con interrupcion a usar, asi como su funcion.
   attachInterrupt(digitalPinToInterrupt(INTPIN), checkPin, RISING);
   digitalWrite(16, LOW);
 
-  
   dht.begin();
 
-  // Setup a function to be called every 2 seconds
+  // Configura la ejecucion de una funcion cada 2000 mS
   timer.setInterval(2000L, sendSensor);
-  
+  // Funcion para iniciar conexion WiFi 
+  // y configurar las credenciales de Blynk
   Blynk.begin(auth, ssid, pass);
 }
 
-void loop()
-{
+void loop(){
   Blynk.run();
   timer.run();
   if (pinChanged) {
