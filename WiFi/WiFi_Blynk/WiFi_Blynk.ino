@@ -11,8 +11,8 @@ char auth[] = "6b1e353ac76c4270b5e24a269c6415f8";
 
 // Your WiFi credentials.
 // Set password to "" for open networks.
-char ssid[] = "TihBeta2";
-char pass[] = "1nv3nt0r3S";
+char ssid[] = "Wifi_prueba";
+char pass[] = "123456789";
 
 #define DHTPIN 23        
 #define INTPIN 4
