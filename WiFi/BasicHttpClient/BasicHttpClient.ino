@@ -11,7 +11,7 @@ void setup() {
 
     // Añadimos un Access point para conectarnos a internet
     // Nuestro SSID y PSWD
-    wifiMulti.addAP("TihBeta2", "1nv3nt0r3S");
+    wifiMulti.addAP("Wifi_prueba", "123456789");
 
     Serial.println();
     Serial.println();
